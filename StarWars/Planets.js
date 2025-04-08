@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Modal,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import Search from "./Search";
 export default function Planets() {
   const [items, setItems] = useState([]);
   useEffect(() => {
@@ -15,6 +24,7 @@ export default function Planets() {
   });
   return (
     <ScrollView style={styles.container}>
+      <Search></Search>
       {items.map((item, index) => {
         return (
           <View style={styles.planetCard} key={index}>
@@ -35,6 +45,7 @@ export default function Planets() {
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

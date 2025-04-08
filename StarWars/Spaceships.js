@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import Search from "./Search";
+
 export default function Spaceships() {
   const [items, setItems] = useState([]);
   useEffect(() => {
@@ -15,6 +17,7 @@ export default function Spaceships() {
   });
   return (
     <ScrollView style={styles.container}>
+      <Search></Search>
       {items.map((item, index) => {
         return (
           <View style={styles.spaceshipCard} key={index}>
