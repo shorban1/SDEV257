@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Modal,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import Search from "./Search";
+import Card from "./Card";
+import { styles } from "./styles";
 
 export default function Films() {
   const [items, setItems] = useState([]);
+
+  const [swipedCard, setSwipedCard] = useState("");
+  const swipeModalProps = {
+    animationType: "fade",
+    transparent: true,
+    visible: Boolean(swipedCard),
+  };
+
+  function onSwipe(name) {
+    return () => {
+      setSwipedCard(name);
+    };
+  }
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch("https://www.swapi.tech/api/films");
@@ -16,16 +39,32 @@ export default function Films() {
   return (
     <ScrollView style={styles.container}>
       <Search></Search>
+      <Modal {...swipeModalProps}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalInner}>
+            <View style={styles.modalTitleContainer}>
+              <Text style={styles.modalTitle}>{swipedCard}</Text>
+            </View>
+            <ScrollView style={styles.modalContent}></ScrollView>
+          </View>
+          <TouchableOpacity
+            style={styles.modalClose}
+            onPress={() => {
+              setSwipedCard("");
+            }}
+          >
+            <Text style={styles.modalCloseText}>{"Close"}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       {items.map((item, index) => {
         return (
-          <View style={styles.filmCard} key={index}>
-            <Text style={styles.filmTitle}>
-              {"Episode " +
-                item.properties.episode_id +
-                " - " +
-                item.properties.title}
-            </Text>
-            <View style={styles.filmDetails}>
+          <Card
+            title={item.properties.title}
+            onSwipe={onSwipe(item.properties.title)}
+            key={index}
+          >
+            <View>
               <Text>Director: {item.properties.director}</Text>
               <Text>Producers: {item.properties.producer}</Text>
               <Text>Release Date: {item.properties.release_date}</Text>
@@ -35,24 +74,9 @@ export default function Films() {
                   item.properties.opening_crawl.replaceAll("\n", "\n\t")}
               </Text>
             </View>
-          </View>
+          </Card>
         );
       })}
     </ScrollView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  filmCard: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: "#fefefe",
-    borderRadius: 10,
-  },
-  filmTitle: {
-    fontSize: 20,
-    color: "#0066ff",
-  },
-});

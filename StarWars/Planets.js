@@ -9,8 +9,23 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Search from "./Search";
+import Card from "./Card";
+import { styles } from "./styles";
 export default function Planets() {
   const [items, setItems] = useState([]);
+
+  const [swipedCard, setSwipedCard] = useState("");
+  const swipeModalProps = {
+    animationType: "fade",
+    transparent: true,
+    visible: Boolean(swipedCard),
+  };
+
+  function onSwipe(name) {
+    return () => {
+      setSwipedCard(name);
+    };
+  }
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch(
@@ -25,11 +40,32 @@ export default function Planets() {
   return (
     <ScrollView style={styles.container}>
       <Search></Search>
+      <Modal {...swipeModalProps}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalInner}>
+            <View style={styles.modalTitleContainer}>
+              <Text style={styles.modalTitle}>{swipedCard}</Text>
+            </View>
+            <ScrollView style={styles.modalContent}></ScrollView>
+          </View>
+          <TouchableOpacity
+            style={styles.modalClose}
+            onPress={() => {
+              setSwipedCard("");
+            }}
+          >
+            <Text style={styles.modalCloseText}>{"Close"}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       {items.map((item, index) => {
         return (
-          <View style={styles.planetCard} key={index}>
-            <Text style={styles.planetTitle}>{item.properties.name}</Text>
-            <View style={styles.planetDetails}>
+          <Card
+            title={item.properties.name}
+            onSwipe={onSwipe(item.properties.name)}
+            key={index}
+          >
+            <View>
               <Text>Climate: {item.properties.climate}</Text>
               <Text>Terrain: {item.properties.terrain}</Text>
               <Text>Surface Water: {item.properties.surface_water}</Text>
@@ -39,25 +75,9 @@ export default function Planets() {
               <Text>Rotation Period: {item.properties.rotation_period}</Text>
               <Text>Population: {item.properties.population}</Text>
             </View>
-          </View>
+          </Card>
         );
       })}
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  planetCard: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: "#fefefe",
-    borderRadius: 10,
-  },
-  planetTitle: {
-    fontSize: 20,
-    color: "#0066ff",
-  },
-});

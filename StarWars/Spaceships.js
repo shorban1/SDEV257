@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Modal,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import Search from "./Search";
+import Card from "./Card";
+import { styles } from "./styles";
 
 export default function Spaceships() {
   const [items, setItems] = useState([]);
+
+  const [swipedCard, setSwipedCard] = useState("");
+  const swipeModalProps = {
+    animationType: "fade",
+    transparent: true,
+    visible: Boolean(swipedCard),
+  };
+
+  function onSwipe(name) {
+    return () => {
+      setSwipedCard(name);
+    };
+  }
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch(
@@ -18,11 +41,32 @@ export default function Spaceships() {
   return (
     <ScrollView style={styles.container}>
       <Search></Search>
+      <Modal {...swipeModalProps}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalInner}>
+            <View style={styles.modalTitleContainer}>
+              <Text style={styles.modalTitle}>{swipedCard}</Text>
+            </View>
+            <ScrollView style={styles.modalContent}></ScrollView>
+          </View>
+          <TouchableOpacity
+            style={styles.modalClose}
+            onPress={() => {
+              setSwipedCard("");
+            }}
+          >
+            <Text style={styles.modalCloseText}>{"Close"}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       {items.map((item, index) => {
         return (
-          <View style={styles.spaceshipCard} key={index}>
-            <Text style={styles.spaceshipTitle}>{item.properties.name}</Text>
-            <View style={styles.spaceshipDetails}>
+          <Card
+            title={item.properties.name}
+            onSwipe={onSwipe(item.properties.name)}
+            key={index}
+          >
+            <View>
               <Text>Model: {item.properties.model}</Text>
               <Text>Manufacturer: {item.properties.manufacturer}</Text>
               <Text>Cost in Credits: {item.properties.cost_in_credits}</Text>
@@ -38,25 +82,9 @@ export default function Spaceships() {
               <Text>Cargo Capacity: {item.properties.cargo_capacity}</Text>
               <Text>Consumables: {item.properties.consumables}</Text>
             </View>
-          </View>
+          </Card>
         );
       })}
     </ScrollView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  spaceshipCard: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: "#fefefe",
-    borderRadius: 10,
-  },
-  spaceshipTitle: {
-    fontSize: 20,
-    color: "#0066ff",
-  },
-  spaceshipDetails: {},
-});
