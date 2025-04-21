@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Search from "./Search";
+import ResponseModal from "./ResponseModal";
 import Card from "./Card";
 import { styles } from "./styles";
 
@@ -16,11 +17,6 @@ export default function Films() {
   const [items, setItems] = useState([]);
 
   const [swipedCard, setSwipedCard] = useState("");
-  const swipeModalProps = {
-    animationType: "fade",
-    transparent: true,
-    visible: Boolean(swipedCard),
-  };
 
   function onSwipe(name) {
     return () => {
@@ -39,24 +35,13 @@ export default function Films() {
   return (
     <ScrollView style={styles.container}>
       <Search></Search>
-      <Modal {...swipeModalProps}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalInner}>
-            <View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>{swipedCard}</Text>
-            </View>
-            <ScrollView style={styles.modalContent}></ScrollView>
-          </View>
-          <TouchableOpacity
-            style={styles.modalClose}
-            onPress={() => {
-              setSwipedCard("");
-            }}
-          >
-            <Text style={styles.modalCloseText}>{"Close"}</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+      <ResponseModal
+        title={swipedCard}
+        dependency={swipedCard}
+        resetDependency={() => {
+          setSwipedCard("");
+        }}
+      ></ResponseModal>
       {items.map((item, index) => {
         return (
           <Card

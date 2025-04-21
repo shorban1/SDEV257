@@ -8,18 +8,18 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+
 import Search from "./Search";
 import Card from "./Card";
+import ResponseModal from "./ResponseModal";
+
 import { styles } from "./styles";
+
 export default function Planets() {
   const [items, setItems] = useState([]);
 
   const [swipedCard, setSwipedCard] = useState("");
-  const swipeModalProps = {
-    animationType: "fade",
-    transparent: true,
-    visible: Boolean(swipedCard),
-  };
 
   function onSwipe(name) {
     return () => {
@@ -40,24 +40,13 @@ export default function Planets() {
   return (
     <ScrollView style={styles.container}>
       <Search></Search>
-      <Modal {...swipeModalProps}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalInner}>
-            <View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>{swipedCard}</Text>
-            </View>
-            <ScrollView style={styles.modalContent}></ScrollView>
-          </View>
-          <TouchableOpacity
-            style={styles.modalClose}
-            onPress={() => {
-              setSwipedCard("");
-            }}
-          >
-            <Text style={styles.modalCloseText}>{"Close"}</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+      <ResponseModal
+        title={swipedCard}
+        dependency={swipedCard}
+        resetDependency={() => {
+          setSwipedCard("");
+        }}
+      ></ResponseModal>
       {items.map((item, index) => {
         return (
           <Card

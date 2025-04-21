@@ -8,6 +8,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+
+import ResponseModal from "./ResponseModal";
+import { styles } from "./styles";
 
 export default function Search() {
   const [submittedText, setSubmittedText] = useState("");
@@ -16,6 +24,23 @@ export default function Search() {
     transparent: true,
     visible: Boolean(submittedText),
   };
+
+  const AnimatedTouchableOpacity =
+    Animated.createAnimatedComponent(TouchableOpacity);
+
+  const modalWidth = useSharedValue(300);
+  const modalHeight = useSharedValue(400);
+  const modalCloseWidth = useSharedValue(300);
+  const modalCloseHeight = useSharedValue(40);
+
+  const modalAnimatedStyles = useAnimatedStyle(() => ({
+    width: modalWidth.value,
+    height: modalHeight.value,
+  }));
+  const modalCloseAnimatedStyles = useAnimatedStyle(() => ({
+    width: modalCloseWidth.value,
+    height: modalCloseHeight.value,
+  }));
   return (
     <>
       <TextInput
@@ -23,93 +48,28 @@ export default function Search() {
         placeholder="Search..."
         onSubmitEditing={(e) => {
           setSubmittedText(e.nativeEvent.text);
+          modalWidth.value = 0;
+          modalHeight.value = 0;
+          modalCloseWidth.value = 0;
+          modalCloseHeight.value = 0;
+          modalWidth.value = withSpring(300);
+          modalHeight.value = withSpring(400);
+          modalCloseWidth.value = withSpring(300);
+          modalCloseHeight.value = withSpring(40);
         }}
         onFocus={() => {
           setSubmittedText("");
         }}
       />
-      <Modal {...modalProps}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalInner}>
-            <View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>
-                {'Results for "' + submittedText + '"'}
-              </Text>
-            </View>
-            <ScrollView style={styles.modalContent}>
-              <Text>{"no results"}</Text>
-            </ScrollView>
-          </View>
-          <TouchableOpacity
-            style={styles.modalClose}
-            onPress={() => {
-              setSubmittedText("");
-            }}
-          >
-            <Text style={styles.modalCloseText}>{"Close"}</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+      <ResponseModal
+        title={'Results for "' + submittedText + '"'}
+        dependency={submittedText}
+        resetDependency={() => {
+          setSubmittedText("");
+        }}
+      >
+        <Text>{"no results"}</Text>
+      </ResponseModal>
     </>
   );
 }
-const styles = StyleSheet.create({
-  search: {
-    height: 35,
-    borderColor: "#dedede",
-    borderWidth: 1,
-    paddingLeft: 10,
-    backgroundColor: "#fefefe",
-    margin: 10,
-    marginBottom: 0,
-  },
-  modalContainer: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#0008",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalInner: {
-    width: 300,
-    height: 400,
-    borderRadius: 10,
-    backgroundColor: "#fefefe",
-    justifyContent: "top",
-    alignItems: "left",
-  },
-  modalTitleContainer: {
-    width: "100%",
-    minHeight: 40,
-    justifyContent: "center",
-    alignItems: "left",
-    backgroundColor: "#eeeeee",
-    borderWidth: 1,
-    borderColor: "#dedede",
-    borderTopLeftRadius: 9,
-    borderTopRightRadius: 9,
-  },
-  modalTitle: {
-    fontSize: 16,
-    color: "#0066ff",
-    padding: 10,
-  },
-  modalContent: {
-    width: "100%",
-    height: "100%",
-    padding: 10,
-  },
-  modalClose: {
-    width: 300,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#0066ff",
-    borderRadius: 9,
-    marginTop: 10,
-  },
-  modalCloseText: {
-    fontSize: 16,
-    color: "#fefefe",
-  },
-});
