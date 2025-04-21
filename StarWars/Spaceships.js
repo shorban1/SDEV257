@@ -8,10 +8,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import HeroImage from "./HeroImage";
 import Search from "./Search";
 import ResponseModal from "./ResponseModal";
 import Card from "./Card";
 import { styles } from "./styles";
+
+const hero = require("./assets/images/spaceship-hero.jpeg");
 
 export default function Spaceships() {
   const [items, setItems] = useState([]);
@@ -36,6 +39,7 @@ export default function Spaceships() {
   });
   return (
     <ScrollView style={styles.container}>
+      <HeroImage imageSrc={hero} />
       <Search></Search>
       <ResponseModal
         title={swipedCard}

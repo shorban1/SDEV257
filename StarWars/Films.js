@@ -7,11 +7,15 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
+import HeroImage from "./HeroImage";
 import Search from "./Search";
 import ResponseModal from "./ResponseModal";
 import Card from "./Card";
 import { styles } from "./styles";
+
+const hero = require("./assets/images/film-hero.jpeg");
 
 export default function Films() {
   const [items, setItems] = useState([]);
@@ -34,6 +38,7 @@ export default function Films() {
   });
   return (
     <ScrollView style={styles.container}>
+      <HeroImage imageSrc={hero} />
       <Search></Search>
       <ResponseModal
         title={swipedCard}

@@ -10,11 +10,14 @@ import {
 } from "react-native";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 
+import HeroImage from "./HeroImage";
 import Search from "./Search";
 import Card from "./Card";
 import ResponseModal from "./ResponseModal";
 
 import { styles } from "./styles";
+
+const hero = require("./assets/images/planets-hero.jpeg");
 
 export default function Planets() {
   const [items, setItems] = useState([]);
@@ -39,6 +42,7 @@ export default function Planets() {
   });
   return (
     <ScrollView style={styles.container}>
+      <HeroImage imageSrc={hero} />
       <Search></Search>
       <ResponseModal
         title={swipedCard}
