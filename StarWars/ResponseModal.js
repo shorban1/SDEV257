@@ -55,7 +55,7 @@ export default function ResponseModal(props) {
     if (props.dependency) {
       openModule();
     }
-  }, [props.dependency, openModule]);
+  }, [props.dependency]);
 
   return (
     <>
