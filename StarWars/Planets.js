@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+import ConnectionStatus from "./ConnectionStatus";
 
 import HeroImage from "./HeroImage";
 import Search from "./Search";
@@ -41,36 +42,39 @@ export default function Planets() {
     fetchCourses();
   });
   return (
-    <ScrollView style={styles.container}>
-      <HeroImage imageSrc={hero} />
-      <Search></Search>
-      <ResponseModal
-        title={swipedCard}
-        dependency={swipedCard}
-        resetDependency={() => {
-          setSwipedCard("");
-        }}
-      ></ResponseModal>
-      {items.map((item, index) => {
-        return (
-          <Card
-            title={item.properties.name}
-            onSwipe={onSwipe(item.properties.name)}
-            key={index}
-          >
-            <View>
-              <Text>Climate: {item.properties.climate}</Text>
-              <Text>Terrain: {item.properties.terrain}</Text>
-              <Text>Surface Water: {item.properties.surface_water}</Text>
-              <Text>Gravity: {item.properties.gravity}</Text>
-              <Text>Diameter: {item.properties.diameter}</Text>
-              <Text>Orbital Period: {item.properties.orbital_period}</Text>
-              <Text>Rotation Period: {item.properties.rotation_period}</Text>
-              <Text>Population: {item.properties.population}</Text>
-            </View>
-          </Card>
-        );
-      })}
-    </ScrollView>
+    <>
+      <ConnectionStatus />
+      <ScrollView style={styles.container}>
+        <HeroImage imageSrc={hero} />
+        <Search></Search>
+        <ResponseModal
+          title={swipedCard}
+          dependency={swipedCard}
+          resetDependency={() => {
+            setSwipedCard("");
+          }}
+        ></ResponseModal>
+        {items.map((item, index) => {
+          return (
+            <Card
+              title={item.properties.name}
+              onSwipe={onSwipe(item.properties.name)}
+              key={index}
+            >
+              <View>
+                <Text>Climate: {item.properties.climate}</Text>
+                <Text>Terrain: {item.properties.terrain}</Text>
+                <Text>Surface Water: {item.properties.surface_water}</Text>
+                <Text>Gravity: {item.properties.gravity}</Text>
+                <Text>Diameter: {item.properties.diameter}</Text>
+                <Text>Orbital Period: {item.properties.orbital_period}</Text>
+                <Text>Rotation Period: {item.properties.rotation_period}</Text>
+                <Text>Population: {item.properties.population}</Text>
+              </View>
+            </Card>
+          );
+        })}
+      </ScrollView>
+    </>
   );
 }

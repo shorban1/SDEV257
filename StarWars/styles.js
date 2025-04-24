@@ -79,4 +79,11 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fefefe",
   },
+  offlineWarning: {
+    backgroundColor: "#ff5555",
+    color: "#ffffff",
+    fontSize: 16,
+    padding: 10,
+    textAlign: "center",
+  },
 });
