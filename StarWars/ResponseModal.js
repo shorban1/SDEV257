@@ -17,7 +17,6 @@ import Animated, {
 import { styles } from "./styles";
 
 export default function ResponseModal(props) {
-  const [prevDependency, setPrevDependency] = useState("");
   const modalProps = {
     animationType: "fade",
     transparent: true,
@@ -56,10 +55,7 @@ export default function ResponseModal(props) {
     if (props.dependency) {
       openModule();
     }
-  }, [props.dependency]);
-  //   if (props.dependency && props.dependency !== prevDependency) {
-  //     setPrevDependency(props.dependency);
-  //     openModule();
+  }, [props.dependency, openModule]);
 
   return (
     <>
