@@ -86,4 +86,36 @@ export const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
   },
+  detailsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  detailsHeader: {
+    fontSize: 24,
+    color: "#0066ff",
+    padding: 20,
+    paddingLeft: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#dedede",
+    backgroundColor: "#fefefe",
+  },
+  detail: {
+    padding: 10,
+    flexBasis: "50%",
+  },
+  detailTitle: {
+    fontSize: 16,
+    backgroundColor: "#0055dd",
+    color: "#ffffff",
+    padding: 5,
+  },
+  detailInfo: {
+    fontSize: 16,
+    color: "#000000",
+    padding: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#dedede",
+    backgroundColor: "#fefefe",
+  },
 });

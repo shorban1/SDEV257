@@ -1,15 +1,19 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import Planets from "./Planets";
 import Films from "./Films";
 import Spaceships from "./Spaceships";
+import Details from "./Details";
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+function NavigationOptions() {
   return (
-    <NavigationContainer>
+    <>
       {Platform.OS === "ios" && (
         <Tab.Navigator>
           <Tab.Screen name="Planets" component={Planets} />
@@ -24,6 +28,21 @@ export default function App() {
           <Drawer.Screen name="Spaceships" component={Spaceships} />
         </Drawer.Navigator>
       )}
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Back"
+          component={NavigationOptions}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Details" component={Details} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

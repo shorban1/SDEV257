@@ -16,27 +16,27 @@ import Search from "./Search";
 import Card from "./Card";
 import ResponseModal from "./ResponseModal";
 
+import Details from "./Details";
+
 import { styles } from "./styles";
 
 const hero = require("./assets/images/planets-hero.jpeg");
 
-export default function Planets() {
+export default function Planets({ navigation }) {
   const [items, setItems] = useState([]);
 
   const [swipedCard, setSwipedCard] = useState("");
 
-  function onSwipe(name) {
-    return () => {
-      setSwipedCard(name);
-    };
+  function onSwipe(item) {
+    return () => navigation.navigate("Details", { item: item });
   }
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch(
         "https://www.swapi.tech/api/planets?page=1&limit=60&expanded=true"
       );
-      const items = await response.json();
-      setItems(items.results);
+      const json = await response.json();
+      setItems(json.results);
     }
 
     fetchCourses();
@@ -58,7 +58,7 @@ export default function Planets() {
           return (
             <Card
               title={item.properties.name}
-              onSwipe={onSwipe(item.properties.name)}
+              onSwipe={onSwipe(item)}
               key={index}
             >
               <View>
@@ -66,9 +66,6 @@ export default function Planets() {
                 <Text>Terrain: {item.properties.terrain}</Text>
                 <Text>Surface Water: {item.properties.surface_water}</Text>
                 <Text>Gravity: {item.properties.gravity}</Text>
-                <Text>Diameter: {item.properties.diameter}</Text>
-                <Text>Orbital Period: {item.properties.orbital_period}</Text>
-                <Text>Rotation Period: {item.properties.rotation_period}</Text>
                 <Text>Population: {item.properties.population}</Text>
               </View>
             </Card>

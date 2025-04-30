@@ -12,7 +12,7 @@ import { styles } from "./styles";
 
 export default function Card(props) {
   function onScroll(e) {
-    Math.abs(e.nativeEvent.contentOffset.x) > 100 && props.onSwipe();
+    Math.abs(e.nativeEvent.contentOffset.x) > 75 && props.onSwipe();
   }
 
   const scrollProps = {
