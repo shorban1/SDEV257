@@ -18,6 +18,7 @@ import { styles } from "./styles";
 const hero = require("./assets/images/spaceship-hero.jpeg");
 
 export default function Spaceships() {
+  const [spaceships, setSpaceships] = useState([]);
   const [items, setItems] = useState([]);
 
   const [swipedCard, setSwipedCard] = useState("");
@@ -27,23 +28,36 @@ export default function Spaceships() {
       setSwipedCard(name);
     };
   }
+  function onSearch(e) {
+    setItems(
+      spaceships.filter(
+        (i) =>
+          e.nativeEvent.text.length === 0 ||
+          i.properties.name
+            .toLowerCase()
+            .includes(e.nativeEvent.text.toLowerCase())
+      )
+    );
+  }
+
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch(
-        "https://www.swapi.tech/api/starships?page=1&limit=36&expanded=true"
+        "https://www.swapi.tech/api/starships?page=1&limit=60&expanded=true"
       );
-      const items = await response.json();
-      setItems(items.results);
-    }
+      const json = await response.json();
 
+      setSpaceships(json.results);
+      setItems(json.results);
+    }
     fetchCourses();
-  });
+  }, []);
   return (
     <>
       <ConnectionStatus />
       <ScrollView style={styles.container}>
         <HeroImage imageSrc={hero} />
-        <Search></Search>
+        <Search onSearch={onSearch}></Search>
         <ResponseModal
           title={swipedCard}
           dependency={swipedCard}

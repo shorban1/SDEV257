@@ -23,6 +23,7 @@ import { styles } from "./styles";
 const hero = require("./assets/images/planets-hero.jpeg");
 
 export default function Planets({ navigation }) {
+  const [planets, setPlanets] = useState([]);
   const [items, setItems] = useState([]);
 
   const [swipedCard, setSwipedCard] = useState("");
@@ -30,23 +31,37 @@ export default function Planets({ navigation }) {
   function onSwipe(item) {
     return () => navigation.navigate("Details", { item: item });
   }
+
+  function onSearch(e) {
+    setItems(
+      planets.filter(
+        (i) =>
+          e.nativeEvent.text.length === 0 ||
+          i.properties.name
+            .toLowerCase()
+            .includes(e.nativeEvent.text.toLowerCase())
+      )
+    );
+  }
+
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch(
         "https://www.swapi.tech/api/planets?page=1&limit=60&expanded=true"
       );
       const json = await response.json();
+
+      setPlanets(json.results);
       setItems(json.results);
     }
-
     fetchCourses();
-  });
+  }, []);
   return (
     <>
       <ConnectionStatus />
       <ScrollView style={styles.container}>
         <HeroImage imageSrc={hero} />
-        <Search></Search>
+        <Search onSearch={onSearch}></Search>
         <ResponseModal
           title={swipedCard}
           dependency={swipedCard}

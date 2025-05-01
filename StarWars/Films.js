@@ -19,6 +19,7 @@ import { styles } from "./styles";
 const hero = require("./assets/images/film-hero.jpeg");
 
 export default function Films() {
+  const [films, setFilms] = useState([]);
   const [items, setItems] = useState([]);
 
   const [swipedCard, setSwipedCard] = useState("");
@@ -28,21 +29,34 @@ export default function Films() {
       setSwipedCard(name);
     };
   }
+  function onSearch(e) {
+    setItems(
+      films.filter(
+        (i) =>
+          e.nativeEvent.text.length === 0 ||
+          i.properties.title
+            .toLowerCase()
+            .includes(e.nativeEvent.text.toLowerCase())
+      )
+    );
+  }
+
   useEffect(() => {
     async function fetchCourses() {
       const response = await fetch("https://www.swapi.tech/api/films");
-      const items = await response.json();
-      setItems(items.result);
-    }
+      const json = await response.json();
 
+      setFilms(json.result);
+      setItems(json.result);
+    }
     fetchCourses();
-  });
+  }, []);
   return (
     <>
       <ConnectionStatus />
       <ScrollView style={styles.container}>
         <HeroImage imageSrc={hero} />
-        <Search></Search>
+        <Search onSearch={onSearch}></Search>
         <ResponseModal
           title={swipedCard}
           dependency={swipedCard}
